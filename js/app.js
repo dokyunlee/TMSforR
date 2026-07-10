@@ -688,7 +688,7 @@ document.addEventListener("DOMContentLoaded", () => {
       addThoughtLog(`[카테고리 규칙] 선택 프레임: ${(fallbackFactors.selectedFrames || fallbackResults.selectedFrames || []).join(" + ")}`, "process");
       setGenerationStep("frames", "done");
       setGenerationStep("constraints", "active");
-      addThoughtLog("[제약조건] 후보 문구는 각각 한국어 3~5문장으로 만들고, 최종 작업 전 문구는 선택 프레임 2개에 해당하는 후보 2개를 문장 수 제한 없이 자연스럽게 섞습니다.", "process");
+      addThoughtLog("[제약조건] 후보 문구는 각각 자연스럽게 이어지는 한국어 5문장으로 만들고, 최종 작업 전 문구는 선택 프레임 2개에 해당하는 후보 2개를 문장 수 제한 없이 자연스럽게 섞습니다.", "process");
       setGenerationStep("constraints", "done");
 
       let rawResults;

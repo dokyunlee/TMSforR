@@ -178,7 +178,7 @@ ${rawText.trim()}
       selectedFrames,
       frameSelectionReason: this.explainFrameSelection(inferredTaskTypes, selectedFrames, primaryTaskType),
       constraintsApplied: [
-        "한국어 3~5문장",
+        "후보별 한국어 5문장",
         "죄책감 유발 표현 금지",
         "생산성 압박 또는 성과 강요 금지",
         "작업 목표 1회 이상 포함",
@@ -321,14 +321,14 @@ Input:
 
 Step 1. Use only the selected motivational framing for the final before-task message.
 - Still generate three before-task candidates: Meaningfulness, Competence, and Autonomy support.
-- Each candidate must be 3 to 5 sentences.
+- Each candidate must be exactly 5 complete, naturally connected sentences.
 - finalBeforeText has no sentence-count limit.
 - finalBeforeText must naturally blend the two candidates that match the two selected frames.
 - Do not mechanically add the unselected SDT frame to finalBeforeText.
 
 Step 2. Generate a before-task message under these constraints:
 - Korean
-- 3 to 5 sentences for candidates only
+- Exactly 5 complete sentences for each candidate
 - Warm and human, as if a real requester wrote it directly
 - Avoid stiff institutional phrasing; do not overuse "-합니다"
 - Use natural Korean honorifics such as "-해 주세요", "-괜찮아요", "-도움이 됩니다"
@@ -346,9 +346,9 @@ Step 2. Generate a before-task message under these constraints:
 - Make each sentence follow naturally from the previous sentence
 - An exclamation mark or one light emoji is allowed, but use at most one per message
 
-Step 3. Generate an after-task message:
+Step 3. Generate an after-task message candidate:
 - Korean
-- 2 to 4 sentences
+- Exactly 5 complete, naturally connected sentences
 - Thank the worker specifically
 - Mention the completed contribution
 - Avoid excessive praise
@@ -386,24 +386,24 @@ Return JSON only:
         return `참여해 주셔서 감사합니다! 이번 작업에서는 ${objective}를 함께 확인하려고 합니다. 작아 보이는 판단도 모이면 ${impact}에 필요한 데이터를 더 믿을 수 있게 만드는 데 도움이 됩니다. ${fatiguePhrase}, ${taskLengthPhrase}. 그리고 혹시 애매한 항목이 있으면 무리해서 맞히려 하기보다 안내 기준에 맞춰 천천히 골라 주세요.`;
       }
       if (strategy === "competence") {
-        return `이 작업은 빠르게 누르는 것보다 천천히 구분해 주시는 눈이 더 중요합니다. ${objective} 과정에서는 사람의 맥락 판단이 데이터 품질을 꽤 많이 좌우하거든요. 그리고 그 데이터는 ${impact}라는 목표에 맞춰 쓰이게 됩니다. ${taskLengthPhrase}이니, 확인 가능한 기준 안에서 편한 속도로 진행해 주세요.`;
+        return `이 작업은 빠르게 누르는 것보다 천천히 구분해 주시는 눈이 더 중요합니다. ${objective} 과정에서는 사람의 맥락 판단이 데이터 품질을 꽤 많이 좌우하거든요. 그리고 그 데이터는 ${impact}라는 목표에 맞춰 쓰이게 됩니다. ${taskLengthPhrase}이니, 확인 가능한 기준 안에서 편한 속도로 진행해 주세요. 애매한 항목은 안내 기준을 다시 살펴본 뒤 가장 적절하다고 생각하는 쪽을 선택해 주시면 됩니다.`;
       }
       if (strategy === "autonomy") {
-        return `시작하기 전에 짧게 안내드릴게요. ${objective}를 하다 보면 애매한 항목이 있을 수 있는데, 그럴 때는 무리해서 추측하지 않아도 괜찮습니다. ${fatiguePhrase}, 본인에게 편한 속도로 하나씩 봐 주세요. 이렇게 모인 판단은 ${impact}에 필요한 데이터 품질을 높이는 데 쓰입니다.`;
+        return `시작하기 전에 짧게 안내드릴게요. ${objective}를 하다 보면 애매한 항목이 있을 수 있는데, 그럴 때는 무리해서 추측하지 않아도 괜찮습니다. ${fatiguePhrase}, 본인에게 편한 속도로 하나씩 봐 주세요. ${taskLengthPhrase}이니 필요한 경우 잠시 호흡을 고르셔도 됩니다. 이렇게 모인 판단은 ${impact}에 필요한 데이터 품질을 높이는 데 쓰입니다.`;
       }
-      return `참여해 주셔서 감사합니다! ${objective} 작업은 ${impact}에 필요한 작은 판단들을 차곡차곡 모으는 과정입니다. ${fatiguePhrase}, ${taskLengthPhrase}. 너무 부담 갖지 마시고, 기준을 보면서 한 항목씩 편하게 선택해 주세요.`;
+      return `참여해 주셔서 감사합니다! ${objective} 작업은 ${impact}에 필요한 작은 판단들을 차곡차곡 모으는 과정입니다. ${fatiguePhrase}, ${taskLengthPhrase}. 너무 부담 갖지 마시고, 기준을 보면서 한 항목씩 편하게 선택해 주세요. 판단이 어려운 항목은 무리해서 단정하지 않고 안내된 범위 안에서 골라 주셔도 괜찮습니다.`;
     }
 
     if (strategy === "quality") {
-      return `작업 마무리해 주셔서 감사합니다! 방금 제출해 주신 판단은 ${objective} 관련 데이터를 더 정리된 형태로 만드는 데 반영됩니다. 그리고 이 데이터는 ${impact}라는 목표에 맞춰 조심스럽게 활용하겠습니다. 승인된 보상금 $${reward}이(가) 기록되었습니다.`;
+      return `작업 마무리해 주셔서 감사합니다! 방금 제출해 주신 판단은 ${objective} 관련 데이터를 더 정리된 형태로 만드는 데 반영됩니다. 세심하게 기준을 적용해 주신 덕분에 결과를 안정적으로 검토할 수 있습니다. 그리고 이 데이터는 ${impact}라는 목표에 맞춰 조심스럽게 활용하겠습니다. 승인된 보상금 $${reward}이(가) 기록되었습니다.`;
     }
     if (strategy === "effort") {
-      return `끝까지 함께해 주셔서 감사합니다. 반복해서 봐야 하는 항목들이 있었지만, 제출해 주신 응답은 ${objective} 데이터 구성에 바로 반영됩니다. 오늘 남겨주신 판단이 ${impact}에 필요한 데이터 품질로 이어질 수 있도록 잘 활용하겠습니다.`;
+      return `끝까지 함께해 주셔서 감사합니다. 반복해서 봐야 하는 항목들을 차분히 살펴봐 주셨습니다. 제출해 주신 응답은 ${objective} 데이터 구성에 반영됩니다. 오늘 남겨주신 판단이 ${impact}에 필요한 데이터 품질로 이어질 수 있도록 잘 활용하겠습니다. 작업은 여기에서 마무리되며 참여해 주신 시간에 다시 한번 감사드립니다.`;
     }
     if (strategy === "autonomy") {
-      return `작업을 마무리해 주셔서 감사합니다. 애매한 항목을 무리해서 추측하지 않고 안내 기준 안에서 살펴봐 주신 점이 데이터 정리에 도움이 됩니다. 제출해 주신 판단은 ${objective} 데이터의 안정성을 높이고, ${impact}에 필요한 검토 자료로 참고하겠습니다. 참여해 주신 점 다시 한번 감사드립니다.`;
+      return `작업을 마무리해 주셔서 감사합니다. 애매한 항목을 무리해서 추측하지 않고 안내 기준 안에서 살펴봐 주신 점이 데이터 정리에 도움이 됩니다. 제출해 주신 판단은 ${objective} 데이터의 안정성을 높이는 데 반영됩니다. 또한 ${impact}에 필요한 검토 자료로 차분히 참고하겠습니다. 참여해 주신 점 다시 한번 감사드립니다.`;
     }
-    return `작업을 완료해 주셔서 감사합니다! 제출해 주신 응답은 ${impact}에 필요한 데이터 구축 과정에 반영됩니다. 짧은 시간이지만 ${objective}를 끝까지 살펴봐 주셔서 큰 도움이 되었습니다.`;
+    return `작업을 완료해 주셔서 감사합니다! ${objective}를 끝까지 차분히 살펴봐 주셨습니다. 제출해 주신 응답은 ${impact}에 필요한 데이터 구축 과정에 반영됩니다. 남겨주신 판단은 전체 결과를 점검하고 정리하는 데 도움이 됩니다. 참여해 주신 시간과 수고에 다시 한번 감사드립니다.`;
   }
 
   /**
@@ -678,7 +678,7 @@ Return JSON only:
     callback(`[4단계: 심리 프레임 선택] ${profile.selectedFrames.join(" + ")} 프레임을 적용합니다.`, "process");
     await sleep(300);
 
-    callback(`[5단계: 생성 제약조건 적용] 3~5문장, 비과장, 비죄책감, 비압박, 구체 목표 1회, 사회적 가치 1회, 완료 가능성 포함 조건을 적용합니다.`, "process");
+    callback(`[5단계: 생성 제약조건 적용] 후보별 5문장, 비과장, 비죄책감, 비압박, 구체 목표 1회, 사회적 가치 1회, 완료 가능성 포함 조건을 적용합니다.`, "process");
     await sleep(300);
 
     callback(`[완료] 작업 전/후 메시지 후보와 LLM 연동용 구조화 프롬프트가 생성되었습니다.`, "success");

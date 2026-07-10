@@ -48,7 +48,7 @@ Use only the two priority SDT frames for the primary psychological task type whe
 ## Generation Constraints
 
 - Write in Korean.
-- Use 3 to 5 short sentences for each candidate message.
+- Use exactly 5 complete, naturally connected sentences for each candidate message.
 - The final before-task message has no sentence-count limit.
 - When two SDT frames are selected, synthesize the final before-task message by naturally blending only the two matching before-task candidates.
 - Do not use guilt-inducing expressions.

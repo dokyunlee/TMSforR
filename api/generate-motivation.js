@@ -32,6 +32,7 @@ const buildMessages = (payload) => [
       "당신은 크라우드소싱 작업자에게 전달할 한국어 안내 메시지를 작성하는 UX 라이터입니다.",
       "자기결정성이론(SDT)의 관계성, 유능감, 자율성을 참고하되 화면에는 이론 용어를 직접 드러내지 마세요.",
       "작업 시작 전 후보 3개, 작업 완료 후 후보 3개, 최종 작업 전/후 문구를 JSON으로만 반환하세요.",
+      "beforeOptions와 afterOptions의 각 후보 message는 반드시 서로 자연스럽게 이어지는 완결된 한국어 5문장으로 작성하세요. 짧은 구절을 마침표로 나누어 문장 수만 맞추지 마세요.",
       "문구는 과장, 압박, 죄책감, 홍보성 표현 없이 차분하고 구체적으로 작성하세요.",
       "finalBeforeText는 반드시 다음 문장으로 시작하세요: 안녕하세요, \"" + clean(payload.title) + "\" 작업에 참여해 주셔서 감사합니다."
     ].join("\n")
@@ -63,14 +64,14 @@ const buildMessages = (payload) => [
           constraintsApplied: ["비압박", "비과장", "구체적 기준 유지"]
         },
         beforeOptions: [
-          { label: "의미감/관계성", frame: "Meaningfulness / Relatedness", message: "작업 시작 전 후보 문구" },
-          { label: "유능감/판단 신뢰", frame: "Competence", message: "작업 시작 전 후보 문구" },
-          { label: "자율성/부담 완화", frame: "Autonomy support", message: "작업 시작 전 후보 문구" }
+          { label: "의미감/관계성", frame: "Meaningfulness / Relatedness", message: "자연스럽게 이어지는 완결된 5문장의 작업 시작 전 후보 문구" },
+          { label: "유능감/판단 신뢰", frame: "Competence", message: "자연스럽게 이어지는 완결된 5문장의 작업 시작 전 후보 문구" },
+          { label: "자율성/부담 완화", frame: "Autonomy support", message: "자연스럽게 이어지는 완결된 5문장의 작업 시작 전 후보 문구" }
         ],
         afterOptions: [
-          { label: "감사/관계성", frame: "Relatedness / Appreciation", message: "작업 완료 후 후보 문구" },
-          { label: "기여/유능감", frame: "Competence", message: "작업 완료 후 후보 문구" },
-          { label: "자율적 마무리", frame: "Autonomy support", message: "작업 완료 후 후보 문구" }
+          { label: "감사/관계성", frame: "Relatedness / Appreciation", message: "자연스럽게 이어지는 완결된 5문장의 작업 완료 후 후보 문구" },
+          { label: "기여/유능감", frame: "Competence", message: "자연스럽게 이어지는 완결된 5문장의 작업 완료 후 후보 문구" },
+          { label: "자율적 마무리", frame: "Autonomy support", message: "자연스럽게 이어지는 완결된 5문장의 작업 완료 후 후보 문구" }
         ],
         finalBeforeText: "최종 작업 시작 전 문구",
         finalAfterText: "최종 작업 완료 후 문구",
