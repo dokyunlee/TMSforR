@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Message Studio</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.321.0/font/lucide.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <style>
+    :root {
+      /* Main Brand: Royal Blue (C100 M72 Y0 K38) -> #1e40af */
+      --brand-blue: #1e40af;
+      --brand-blue-light: #e0e7ff;
+      --brand-blue-hover: #1e3a8a;
+      
+      /* Requester (Google Forms Style) */
+      --g-bg: #f5f7fa;
+      --g-border: #d1d5db;
+      --g-text-main: #111827;
+      --g-text-sec: #4b5563;
+      --radius-g: 8px;
+      --shadow-g: 0 2px 4px rgba(0,0,0,0.1);
+
+      /* Worker (MTurk Style - adapted to brand) */
+      --m-bg: #f3f4f6;
+      --m-header-bg: #1e3a8a; /* Brand Blue */
+      --m-panel-bg: #ffffff;
+      --m-border: #d1d5db;
+      --m-btn: #f59e0b; /* Amber for contrast */
+      --m-btn-hover: #d97706;
+      
+      --app-header-height: 60px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Roboto', 'Noto Sans KR', sans-serif; background-color: var(--g-bg); color: var(--g-text-main); min-height: 100vh; display: flex; flex-direction: column; }
+    body.worker-mode { background-color: var(--m-bg); }
+
+    .app-header { background: #ffffff; height: var(--app-header-height); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: 2px solid var(--brand-blue); position: sticky; top: 0; z-index: 1000; }
+    .app-logo { display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 700; color: var(--brand-blue); }
+    
+    .nav-tab { background: none; border: none; padding: 0 16px; height: var(--app-header-height); font-weight: 500; color: var(--g-text-sec); cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; }
+    .nav-tab.active { color: var(--brand-blue); border-bottom-color: var(--brand-blue); }
+
+    /* Requester UI */
+    .g-container { width: 100%; max-width: 770px; padding: 32px 20px; margin: 0 auto; }
+    .g-card { background: #ffffff; border: 1px solid var(--g-border); border-radius: var(--radius-g); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow-g); }
+    .g-card-top { border-top: 10px solid var(--brand-blue); }
+    .g-title-input { width: 100%; border: none; font-size: 32px; margin-bottom: 12px; outline: none; }
+    .g-btn-primary { background: var(--brand-blue); color: #fff; padding: 10px 24px; border-radius: 4px; border: none; cursor: pointer; }
+    .g-btn-primary:hover { background: var(--brand-blue-hover); }
+
+    /* Worker UI */
+    .m-container { width: 100%; max-width: 1000px; padding: 32px 20px; margin: 0 auto; }
+    .m-header { background: var(--m-header-bg); color: #ffffff; padding: 16px 24px; display: flex; justify-content: space-between; }
+    .m-btn { background: var(--m-btn); border: 1px solid #b45309; color: #111; padding: 8px 24px; border-radius: 4px; font-weight: 600; cursor: pointer; }
+    .m-btn:hover { background: var(--m-btn-hover); }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="app-logo"><i class="lucide-layers"></i> Task Message Studio</div>
+    <div style="display:flex; gap:8px;">
+      <button id="tab-req" class="nav-tab active">관리자 생성</button>
+      <button id="tab-work" class="nav-tab">작업자 미리보기</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-req" class="g-container">
+      <div class="g-card g-card-top">
+        <input type="text" id="req-title" class="g-title-input" value="의료 이미지 종양 세포 분류">
+        <textarea id="req-desc" class="g-desc-input" style="width:100%; border:none; resize:vertical; min-height:60px; font-family:inherit;">제공된 영상에서 종양 의심 조직을 분류해주세요.</textarea>
+      </div>
+      <button id="btn-generate" class="g-btn-primary">메시지 생성</button>
+    </section>
+
+    <section id="view-work" class="m-container hidden">
+      <div class="m-header">
+        <h2 id="m-title-disp">Task Title</h2>
+        <div class="m-timer">15:00</div>
+      </div>
+      <div style="padding:20px; background:#fff; border:1px solid #ccc;">
+        <div id="m-prime-disp" style="padding:15px; border-left:4px solid var(--brand-blue); background:#eff6ff; margin-bottom:20px;"></div>
+        <button id="btn-accept" class="m-btn">Accept HIT</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const els = {
+      tabReq: document.getElementById('tab-req'), tabWork: document.getElementById('tab-work'),
+      viewReq: document.getElementById('view-req'), viewWork: document.getElementById('view-work'),
+      btnGen: document.getElementById('btn-generate'),
+      rTitle: document.getElementById('req-title'),
+      mActive: document.getElementById('view-work'),
+      mTitle: document.getElementById('m-title-disp'),
+      mPrime: document.getElementById('m-prime-disp'),
+      btnAccept: document.getElementById('btn-accept')
+    };
+
+    els.tabReq.addEventListener('click', () => {
+      document.body.classList.remove('worker-mode');
+      els.tabReq.classList.add('active'); els.tabWork.classList.remove('active');
+      els.viewReq.classList.remove('hidden'); els.viewWork.classList.add('hidden');
+    });
+
+    els.tabWork.addEventListener('click', () => {
+      document.body.classList.add('worker-mode');
+      els.tabWork.classList.add('active'); els.tabReq.classList.remove('active');
+      els.viewWork.classList.remove('hidden'); els.viewReq.classList.add('hidden');
+    });
+
+    els.btnGen.addEventListener('click', () => {
+      els.mTitle.textContent = els.rTitle.value;
+      els.mPrime.textContent = "로열 블루 테마가 적용되었습니다. 이 작업은 [ " + els.rTitle.value + " ] 에 대한 정밀한 라벨링을 요구합니다.";
+      alert("메시지가 생성되었습니다. 미리보기 탭으로 이동하세요.");
+    });
+  </script>
+</body>
+</html>

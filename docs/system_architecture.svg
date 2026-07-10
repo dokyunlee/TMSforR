@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050" role="img" aria-labelledby="title desc">
+  <title id="title">AgenticMotivation System Architecture</title>
+  <desc id="desc">Architecture diagram for a browser-based requester and worker crowdsourcing app with an SDT motivation generation engine, optional Node.js Upstage API proxy, browser local storage, and result export.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }
+      .panel-soft { fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 2; }
+      .client { fill: #eef2ff; stroke: #6366f1; stroke-width: 2.5; }
+      .engine { fill: #ecfeff; stroke: #0891b2; stroke-width: 2.5; }
+      .server { fill: #fef3c7; stroke: #d97706; stroke-width: 2.5; }
+      .store { fill: #ecfdf5; stroke: #059669; stroke-width: 2.5; }
+      .external { fill: #fff1f2; stroke: #e11d48; stroke-width: 2.5; }
+      .asset { fill: #f8fafc; stroke: #64748b; stroke-width: 2; }
+      .text { fill: #0f172a; font: 500 23px Arial, Helvetica, sans-serif; }
+      .small { fill: #334155; font: 500 18px Arial, Helvetica, sans-serif; }
+      .tiny { fill: #475569; font: 500 15px Arial, Helvetica, sans-serif; }
+      .label { fill: #ffffff; font: 700 17px Arial, Helvetica, sans-serif; }
+      .title { fill: #0f172a; font: 800 42px Arial, Helvetica, sans-serif; }
+      .subtitle { fill: #475569; font: 500 20px Arial, Helvetica, sans-serif; }
+      .box-title { fill: #0f172a; font: 800 22px Arial, Helvetica, sans-serif; }
+      .badge-client { fill: #4f46e5; }
+      .badge-engine { fill: #0891b2; }
+      .badge-server { fill: #d97706; }
+      .badge-store { fill: #059669; }
+      .badge-external { fill: #e11d48; }
+      .arrow { fill: none; stroke: #334155; stroke-width: 3; marker-end: url(#arrowhead); }
+      .arrow-soft { fill: none; stroke: #64748b; stroke-width: 2.4; stroke-dasharray: 9 7; marker-end: url(#arrowhead-soft); }
+      .arrow-green { fill: none; stroke: #059669; stroke-width: 3; marker-end: url(#arrowhead-green); }
+      .arrow-red { fill: none; stroke: #e11d48; stroke-width: 3; marker-end: url(#arrowhead-red); }
+      .note { fill: #475569; font: 600 15px Arial, Helvetica, sans-serif; }
+    </style>
+    <marker id="arrowhead" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#334155"/>
+    </marker>
+    <marker id="arrowhead-soft" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#059669"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#e11d48"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1600" height="1050"/>
+  <text class="title" x="70" y="78">AgenticMotivation System Architecture</text>
+  <text class="subtitle" x="70" y="112">Context-aware SDT motivation generation for requester-designed crowdsourcing tasks</text>
+
+  <!-- Static assets -->
+  <rect class="panel-soft" x="70" y="145" width="290" height="126" rx="14" filter="url(#shadow)"/>
+  <rect class="badge-client" x="92" y="166" width="85" height="27" rx="13.5"/>
+  <text class="label" x="109" y="185">Static UI</text>
+  <text class="box-title" x="92" y="224">index.html + css/style.css</text>
+  <text class="small" x="92" y="252">Shell, two views, visual system</text>
+
+  <!-- Browser client boundary -->
+  <rect class="panel" x="70" y="310" width="1010" height="600" rx="20" filter="url(#shadow)"/>
+  <rect class="badge-client" x="100" y="335" width="156" height="31" rx="15.5"/>
+  <text class="label" x="122" y="356">Browser client</text>
+  <text class="small" x="272" y="356">js/app.js orchestrates routing, UI state, generation, worker simulation, and export</text>
+
+  <!-- Requester module -->
+  <rect class="client" x="100" y="388" width="300" height="225" rx="16"/>
+  <text class="box-title" x="124" y="424">Requester dashboard</text>
+  <text class="small" x="124" y="459">Task metadata form</text>
+  <text class="small" x="124" y="489">Copilot draft/optimize</text>
+  <text class="small" x="124" y="519">Candidate message editor</text>
+  <text class="small" x="124" y="549">Publish share URL</text>
+  <text class="tiny" x="124" y="584">Inputs: title, reward, category, risk, fatigue, goal, impact</text>
+
+  <!-- App controller module -->
+  <rect class="client" x="440" y="388" width="295" height="225" rx="16"/>
+  <text class="box-title" x="464" y="424">SPA controller</text>
+  <text class="small" x="464" y="459">Hash router: #requester / #worker</text>
+  <text class="small" x="464" y="489">Generation monitor and logs</text>
+  <text class="small" x="464" y="519">Normalizes LLM/local results</text>
+  <text class="small" x="464" y="549">Draft autosave and JSON export</text>
+  <text class="tiny" x="464" y="584">Keys: agentic_tasks, agentic_results</text>
+
+  <!-- Generator engine -->
+  <rect class="engine" x="775" y="388" width="275" height="225" rx="16"/>
+  <text class="box-title" x="799" y="424">SDT generation engine</text>
+  <text class="small" x="799" y="459">AgenticMotivationGenerator</text>
+  <text class="small" x="799" y="489">Psychological profile</text>
+  <text class="small" x="799" y="519">Frame selection rules</text>
+  <text class="small" x="799" y="549">Local fallback synthesis</text>
+  <text class="tiny" x="799" y="584">js/generator.js</text>
+
+  <!-- Worker module -->
+  <rect class="client" x="100" y="658" width="300" height="210" rx="16"/>
+  <text class="box-title" x="124" y="694">Crowd worker view</text>
+  <text class="small" x="124" y="729">Pre-task motivation prime</text>
+  <text class="small" x="124" y="759">Guidelines and reward</text>
+  <text class="small" x="124" y="789">10-item annotation session</text>
+  <text class="small" x="124" y="819">Post-task appreciation</text>
+  <text class="tiny" x="124" y="850">Loaded from #worker?taskId=...</text>
+
+  <!-- Simulated task surface -->
+  <rect class="engine" x="440" y="658" width="295" height="210" rx="16"/>
+  <text class="box-title" x="464" y="694">Task simulator</text>
+  <text class="small" x="464" y="729">Dynamic SVG assets by category</text>
+  <text class="small" x="464" y="759">Options and progress counter</text>
+  <text class="small" x="464" y="789">15-minute countdown</text>
+  <text class="small" x="464" y="819">Submit / skip advances item</text>
+  <text class="tiny" x="464" y="850">medical, autonomous, moderation, general</text>
+
+  <!-- Local storage -->
+  <rect class="store" x="775" y="658" width="275" height="210" rx="16"/>
+  <text class="box-title" x="799" y="694">Browser localStorage</text>
+  <text class="small" x="799" y="729">agentic_tasks</text>
+  <text class="tiny" x="823" y="754">seed, draft, published tasks</text>
+  <text class="small" x="799" y="789">agentic_results</text>
+  <text class="tiny" x="823" y="814">completed worker sessions</text>
+  <text class="small" x="799" y="849">Download results.json</text>
+
+  <!-- Server boundary -->
+  <rect class="panel" x="1150" y="310" width="380" height="420" rx="20" filter="url(#shadow)"/>
+  <rect class="badge-server" x="1180" y="335" width="128" height="31" rx="15.5"/>
+  <text class="label" x="1204" y="356">Node server</text>
+  <text class="small" x="1320" y="356">server.js</text>
+
+  <rect class="server" x="1180" y="388" width="320" height="130" rx="16"/>
+  <text class="box-title" x="1204" y="424">Static file server</text>
+  <text class="small" x="1204" y="459">Serves HTML, CSS, JS, docs</text>
+  <text class="tiny" x="1204" y="491">GET / and static paths</text>
+
+  <rect class="server" x="1180" y="550" width="320" height="150" rx="16"/>
+  <text class="box-title" x="1204" y="586">LLM API proxy</text>
+  <text class="small" x="1204" y="621">POST /api/generate-motivation</text>
+  <text class="small" x="1204" y="651">POST /api/finalize-motivation</text>
+  <text class="tiny" x="1204" y="681">Reads docs/sdt_reference.md; hides API key</text>
+
+  <!-- Reference and external -->
+  <rect class="asset" x="1150" y="770" width="380" height="95" rx="16"/>
+  <text class="box-title" x="1174" y="806">SDT reference document</text>
+  <text class="small" x="1174" y="839">docs/sdt_reference.md: task type to frame rules</text>
+
+  <rect class="external" x="1150" y="905" width="380" height="95" rx="16"/>
+  <text class="box-title" x="1174" y="941">External services</text>
+  <text class="small" x="1174" y="974">Upstage Solar Pro 2 API + UI CDNs</text>
+
+  <!-- Arrows within client -->
+  <path class="arrow" d="M400 500 C420 500, 420 500, 440 500"/>
+  <text class="note" x="407" y="487">events</text>
+  <path class="arrow" d="M735 500 C755 500, 755 500, 775 500"/>
+  <text class="note" x="741" y="487">profile + fallback</text>
+  <path class="arrow-green" d="M587 613 L587 658"/>
+  <text class="note" x="604" y="641">start task</text>
+  <path class="arrow" d="M400 760 C420 760, 420 760, 440 760"/>
+  <text class="note" x="407" y="747">annotation UI</text>
+  <path class="arrow-green" d="M735 765 C755 765, 755 765, 775 765"/>
+  <text class="note" x="743" y="752">session data</text>
+  <path class="arrow-green" d="M912 658 L912 613"/>
+  <text class="note" x="929" y="641">published task</text>
+  <path class="arrow-green" d="M760 720 C690 635, 500 635, 380 613"/>
+  <text class="note" x="515" y="642">share URL loads task</text>
+
+  <!-- Client/server arrows -->
+  <path class="arrow-soft" d="M360 208 C650 190, 970 210, 1180 414"/>
+  <text class="note" x="656" y="197">served by Node or opened as static files</text>
+  <path class="arrow-red" d="M1050 500 C1090 500, 1130 585, 1180 620"/>
+  <text class="note" x="1071" y="535">optional LLM request</text>
+  <path class="arrow-soft" d="M1180 625 C1135 638, 1090 573, 1050 548"/>
+  <text class="note" x="1065" y="624">JSON response or local fallback</text>
+  <path class="arrow" d="M1340 550 L1340 518"/>
+  <path class="arrow" d="M1340 700 L1340 770"/>
+  <path class="arrow-red" d="M1340 730 C1340 805, 1340 840, 1340 905"/>
+  <text class="note" x="1360" y="754">prompt rules</text>
+  <text class="note" x="1360" y="884">API call</text>
+
+  <!-- Legend -->
+  <rect class="panel-soft" x="70" y="945" width="1010" height="55" rx="14"/>
+  <circle cx="100" cy="972" r="8" fill="#4f46e5"/>
+  <text class="tiny" x="118" y="978">Client UI/controller</text>
+  <circle cx="295" cy="972" r="8" fill="#0891b2"/>
+  <text class="tiny" x="313" y="978">Generation/simulation logic</text>
+  <circle cx="555" cy="972" r="8" fill="#d97706"/>
+  <text class="tiny" x="573" y="978">Node HTTP/API boundary</text>
+  <circle cx="805" cy="972" r="8" fill="#059669"/>
+  <text class="tiny" x="823" y="978">Browser persistence/export</text>
+  <circle cx="1010" cy="972" r="8" fill="#e11d48"/>
+  <text class="tiny" x="1028" y="978">External dependency</text>
+</svg>

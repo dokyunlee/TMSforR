@@ -1,0 +1,17 @@
+[
+  {
+    "taskId": "task-seed-101",
+    "taskTitle": "폐 X-Ray 영상 판독을 통한 종양 의심 병변 진단",
+    "category": "medical",
+    "reward": "2.50",
+    "riskLevel": "medium",
+    "fatigueLevel": "medium",
+    "objective": "폐 X-ray 스캔 이미지에서 폐 종양 의심 이상 병변의 세밀한 형상을 파악하기",
+    "socialImpact": "환자의 생명을 구하고 의료용 진단 알고리즘의 보건 정확성을 제고하기",
+    "workerContext": "장시간 피로가 누적된 상태에서 모니터를 응시하며 미세 조직 판독에 집중하는 원격 작업 환경",
+    "workerSession": {
+      "completedAt": "2026-05-21T10:00:00Z",
+      "elapsedSeconds": 340
+    }
+  }
+]

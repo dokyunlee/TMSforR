@@ -1,0 +1,21 @@
+{
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 30
+    },
+    "api/tasks/[id].js": {
+      "maxDuration": 10
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ]
+}
