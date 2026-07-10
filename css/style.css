@@ -3553,6 +3553,72 @@ body.worker-mode #worker-pre-task > .glass-card:first-child span,
   font-family: 'Roboto', 'Noto Sans KR', sans-serif !important;
 }
 
+#worker-task-desc .guideline-heading,
+#workspace-task-desc .guideline-heading {
+  color: #0f766e;
+  font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+#worker-task-desc .guideline-heading-title,
+#workspace-task-desc .guideline-heading-title {
+  color: #0f4c81;
+  font-size: 1.08rem;
+  margin: 1.1rem 0 0.55rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid #bfdbfe;
+}
+
+#worker-task-desc .guideline-heading-subtitle,
+#workspace-task-desc .guideline-heading-subtitle {
+  font-size: 1rem;
+  margin: 0.9rem 0 0.4rem;
+}
+
+#worker-task-desc .guideline-heading:first-child,
+#workspace-task-desc .guideline-heading:first-child {
+  margin-top: 0;
+}
+
+#worker-task-desc .guideline-heading.is-compact,
+#workspace-task-desc .guideline-heading.is-compact {
+  font-size: 0.92rem;
+  margin-top: 0.65rem;
+}
+
+#worker-task-desc .guideline-line,
+#workspace-task-desc .guideline-line {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+#worker-task-desc .guideline-list-line,
+#workspace-task-desc .guideline-list-line {
+  padding-left: 0.15rem;
+  margin-top: 0.22rem;
+}
+
+#worker-task-desc .guideline-emphasis,
+#workspace-task-desc .guideline-emphasis {
+  color: #111827;
+  font-weight: 750;
+  background: rgba(250, 204, 21, 0.2);
+  padding: 0 0.12em;
+  border-radius: 2px;
+}
+
+#worker-task-desc .guideline-spacer,
+#workspace-task-desc .guideline-spacer {
+  height: 0.65rem;
+}
+
+#worker-task-desc .guideline-empty,
+#workspace-task-desc .guideline-empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 .task-spec-grid {
   background: #f8fafc !important;
   border: 1px solid var(--panel-border) !important;

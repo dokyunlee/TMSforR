@@ -1020,9 +1020,65 @@ document.addEventListener("DOMContentLoaded", () => {
   btnExportResults?.addEventListener("click", handleJSONExport);
   btnWorkerExport?.addEventListener("click", handleJSONExport);
 
-  // ==========================================================================
+  // ========================================================================== 
   // CROWD WORKER: PRE-TASK WORKSPACE
-  // ==========================================================================
+  // ========================================================================== 
+
+  const escapeGuidelineHTML = (value = "") => String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+  const formatGuidelineInline = (value = "") => escapeGuidelineHTML(value)
+    .replace(/\*\*([^*\n]+)\*\*/g, '<strong class="guideline-emphasis">$1</strong>');
+
+  const isNaturalGuidelineHeading = (line = "") => {
+    const text = line.trim();
+    if (!text || text.length > 40) return false;
+
+    const commonHeading = /^(?:\d+[.)]\s*)?(?:작업\s*개요|상세\s*가이드라인|가이드라인|판단\s*기준|분류\s*기준|작업\s*절차|진행\s*방법|주의\s*사항|유의\s*사항|예외\s*사항|참고\s*사항|작업\s*목표|제출\s*기준)(?:\s*[:：])?$/i;
+    const bracketHeading = /^\[[^\]]{2,30}\]$/;
+    const shortLabel = /^[^.!?。]{2,24}[:：]$/;
+    return commonHeading.test(text) || bracketHeading.test(text) || shortLabel.test(text);
+  };
+
+  const renderGuidelineMarkdown = (description = "", compact = false) => String(description)
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .map((originalLine) => {
+      const line = originalLine.trim();
+      if (!line) return '<div class="guideline-spacer" aria-hidden="true"></div>';
+
+      const markdownHeading = line.match(/^(#{1,6})\s*(.+?)\s*#*$/);
+      if (markdownHeading) {
+        const level = markdownHeading[1].length <= 2 ? "title" : "subtitle";
+        return `<div class="guideline-heading guideline-heading-${level}${compact ? " is-compact" : ""}">${formatGuidelineInline(markdownHeading[2])}</div>`;
+      }
+
+      const standaloneBold = line.match(/^\*\*(.+?)\*\*$/);
+      if (standaloneBold) {
+        return `<div class="guideline-heading guideline-heading-subtitle${compact ? " is-compact" : ""}">${formatGuidelineInline(standaloneBold[1])}</div>`;
+      }
+
+      if (isNaturalGuidelineHeading(line)) {
+        return `<div class="guideline-heading guideline-heading-subtitle${compact ? " is-compact" : ""}">${formatGuidelineInline(line)}</div>`;
+      }
+
+      const lineType = /^(?:[-*•]|\d+[.)])\s+/.test(line) ? " guideline-list-line" : "";
+      return `<div class="guideline-line${lineType}">${formatGuidelineInline(originalLine)}</div>`;
+    })
+    .join("");
+
+  const renderGuidelineDescription = (container, description, compact = false) => {
+    if (!container) return;
+    if (!description) {
+      container.innerHTML = '<span class="guideline-empty">게시된 상세 가이드라인이 존재하지 않습니다.</span>';
+      return;
+    }
+    container.innerHTML = renderGuidelineMarkdown(description, compact);
+  };
 
   const loadWorkerTask = async (taskId) => {
     const tasks = JSON.parse(localStorage.getItem("agentic_tasks")) || {};
@@ -1080,35 +1136,10 @@ document.addEventListener("DOMContentLoaded", () => {
       workspaceMotivationPrime.textContent = task.beforeText || "귀하의 세심한 인지적 가치는 고품질 데이터 구축의 핵심 주춧돌이 됩니다.";
     }
 
-    // Bind and format description/guidelines beautifully
+    // Preserve the stored guideline text and format Markdown only in worker previews.
     const workerTaskDesc = document.getElementById("worker-task-desc");
-    if (workerTaskDesc) {
-      if (task.description) {
-        let html = task.description
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/^### (.*$)/gim, '<strong style="color: var(--color-teal); font-size: 1.05rem; display: block; margin-top: 1rem; margin-bottom: 0.5rem; font-family: \'Outfit\', sans-serif;">$1</strong>')
-          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-        workerTaskDesc.innerHTML = html;
-      } else {
-        workerTaskDesc.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">게시된 상세 가이드라인이 존재하지 않습니다.</span>`;
-      }
-    }
-
-    if (workspaceTaskDesc) {
-      if (task.description) {
-        let html = task.description
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/^### (.*$)/gim, '<strong style="color: var(--color-teal); font-size: 0.9rem; display: block; margin-top: 0.5rem; margin-bottom: 0.25rem; font-family: \'Outfit\', sans-serif;">$1</strong>')
-          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-        workspaceTaskDesc.innerHTML = html;
-      } else {
-        workspaceTaskDesc.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">게시된 상세 가이드라인이 존재하지 않습니다.</span>`;
-      }
-    }
+    renderGuidelineDescription(workerTaskDesc, task.description);
+    renderGuidelineDescription(workspaceTaskDesc, task.description, true);
   };
 
   // Start Campaign Task Workspace
