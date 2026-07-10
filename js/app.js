@@ -887,7 +887,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const shareStatusText = document.getElementById("share-status-text");
     if (shareStatusText) {
-      shareStatusText.textContent = serverSaved ? "서버 저장 완료" : "로컬 링크 생성";
+      shareStatusText.textContent = serverSaved ? "서버 저장 완료" : "링크 생성";
     }
 
     shareCard.classList.remove("hidden");
